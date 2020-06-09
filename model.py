@@ -11,7 +11,10 @@ from __future__ import division
 #from __future__ import print_function
 
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 from acrnn1 import acrnn
 import pickle as cPickle
 from sklearn.metrics import recall_score as recall
