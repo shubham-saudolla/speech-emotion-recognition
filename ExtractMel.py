@@ -367,10 +367,10 @@ def read_IEMOCAP():
         np.random.shuffle(arr)
         Train_data = Train_data[arr[0:]]
         Train_label = Train_label[arr[0:]]
-        print train_label.shape
-        print train_emt
-        print test_emt
-        print valid_emt
+        print(train_label.shape)
+        print(train_emt)
+        print(test_emt)
+        print(valid_emt)
         #print test_label[0:500,:]
         #f=open('./CASIA_40_delta.pkl','wb')
         #output = './IEMOCAP40.pkl'
