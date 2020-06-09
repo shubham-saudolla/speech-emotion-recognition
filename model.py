@@ -13,7 +13,7 @@ from __future__ import division
 import numpy as np
 import tensorflow as tf
 from acrnn1 import acrnn
-import cPickle
+import pickle as cPickle
 from sklearn.metrics import recall_score as recall
 from sklearn.metrics import confusion_matrix as confusion
 import os
@@ -50,7 +50,7 @@ def dense_to_one_hot(labels_dense, num_classes):
 
 def train():
     #####load data##########
-    
+
     train_data,train_label,test_data,test_label,valid_data,valid_label,Valid_label,Test_label,pernums_test,pernums_valid = load_data(FLAGS.traindata_path)
     train_label = dense_to_one_hot(train_label,FLAGS.num_classes)
     valid_label = dense_to_one_hot(valid_label,FLAGS.num_classes)
@@ -59,8 +59,8 @@ def train():
     dataset_size = train_data.shape[0]
     vnum = pernums_valid.shape[0]
     best_valid_uw = 0
-    
-    
+
+
     ##########tarin model###########
     X = tf.placeholder(tf.float32, shape=[None, FLAGS.image_height,FLAGS.image_width,FLAGS.image_channel])
     Y = tf.placeholder(tf.int32, shape=[None, FLAGS.num_classes])
@@ -73,7 +73,7 @@ def train():
     var_trainable_op = tf.trainable_variables()
     if FLAGS.is_adam:
         # not apply gradient clipping
-        train_op = tf.train.AdamOptimizer(lr).minimize(cost)            
+        train_op = tf.train.AdamOptimizer(lr).minimize(cost)
     else:
         # apply gradient clipping
         grads, _ = tf.clip_by_global_norm(tf.gradients(cost, var_trainable_op), 5)
@@ -86,7 +86,7 @@ def train():
     with tf.Session() as sess:
         sess.run(init)
         for i in range(FLAGS.num_epoch):
-            #learning_rate = FLAGS.learning_rate            
+            #learning_rate = FLAGS.learning_rate
             start = (i * FLAGS.batch_size) % dataset_size
             end = min(start+FLAGS.batch_size, dataset_size)
             [_,tcost,tracc] = sess.run([train_op,cost,accuracy], feed_dict={X:train_data[start:end,:,:,:], Y:train_label[start:end,:],
@@ -113,7 +113,7 @@ def train():
                 for s in range(vnum):
                     y_valid[s,:] = np.max(y_pred_valid[index:index+pernums_valid[s],:],0)
                     index = index + pernums_valid[s]
-    
+
                 valid_acc_uw = recall(np.argmax(valid_label,1),np.argmax(y_valid,1),average='macro')
                 valid_conf = confusion(np.argmax(valid_label, 1),np.argmax(y_valid,1))
                 if valid_acc_uw > best_valid_uw:
@@ -122,17 +122,17 @@ def train():
                     saver.save(sess, os.path.join(FLAGS.checkpoint, FLAGS.model_name), global_step = i+1)
                 print ("*****************************************************************")
                 print ("Epoch: %05d" %(i+1))
-                print ("Training cost: %2.3g" %tcost)   
-                print ("Training accuracy: %3.4g" %tracc) 
+                print ("Training cost: %2.3g" %tcost)
+                print ("Training accuracy: %3.4g" %tracc)
                 print ("Valid cost: %2.3g" %cost_valid)
-                print ("Valid_UA: %3.4g" %valid_acc_uw)    
-                print ("Best valid_UA: %3.4g" %best_valid_uw) 
+                print ("Valid_UA: %3.4g" %valid_acc_uw)
+                print ("Best valid_UA: %3.4g" %best_valid_uw)
                 print ('Valid Confusion Matrix:["ang","sad","hap","neu"]')
                 print (valid_conf)
                 print ('Best Valid Confusion Matrix:["ang","sad","hap","neu"]')
                 print (best_valid_conf)
                 print ("*****************************************************************" )
-                 
-                
+
+
 if __name__=='__main__':
     train()

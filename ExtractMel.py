@@ -11,7 +11,7 @@ import numpy as np
 import python_speech_features as ps
 import os
 import glob
-import cPickle
+import pickle as cPickle
 #import base
 #import sigproc
 eps = 1e-5
@@ -27,9 +27,9 @@ def getlogspec(signal,samplerate=16000,winlen=0.02,winstep=0.01,
     signal = ps.sigproc.preemphasis(signal,preemph)
     frames = ps.sigproc.framesig(signal, winlen*samplerate, winstep*samplerate, winfunc)
     pspec = ps.sigproc.logpowspec(frames,nfft)
-    return pspec 
+    return pspec
 def read_file(filename):
-    file = wave.open(filename,'r')    
+    file = wave.open(filename,'r')
     params = file.getparams()
     nchannels, sampwidth, framerate, wav_length = params[:4]
     str_data = file.readframes(wav_length)
@@ -90,8 +90,8 @@ def load_data():
     f = open('./zscore40.pkl','rb')
     mean1,std1,mean2,std2,mean3,std3 = cPickle.load(f)
     return mean1,std1,mean2,std2,mean3,std3
-        
-        
+
+
 def read_IEMOCAP():
     eps = 1e-5
     tnum = 259 #the number of test utterance
@@ -103,9 +103,9 @@ def read_IEMOCAP():
     pernums_test = np.arange(tnum)#remerber each utterance contain how many segments
     pernums_valid = np.arange(vnum)
     rootdir = '/home/jamhan/hxj/datasets/IEMOCAP_full_release'
-    
+
     mean1,std1,mean2,std2,mean3,std3 = load_data()
-    
+
     #2774
     hapnum = 434#2
     angnum = 433#0
@@ -121,7 +121,7 @@ def read_IEMOCAP():
     train_data = np.empty((train_num,300,filter_num,3),dtype = np.float32)
     test_data = np.empty((test_num,300,filter_num,3),dtype = np.float32)
     valid_data = np.empty((valid_num,300,filter_num,3),dtype = np.float32)
-    
+
     tnum = 0
     vnum = 0
     train_num = 0
@@ -147,8 +147,8 @@ def read_IEMOCAP():
                             if(line[0] == '['):
                                 t = line.split()
                                 emot_map[t[3]] = t[4]
-                                
-        
+
+
                     file_dir = os.path.join(sub_dir, sess, '*.wav')
                     files = glob.glob(file_dir)
                     for filename in files:
@@ -161,8 +161,8 @@ def read_IEMOCAP():
                              delta1 = ps.delta(mel_spec, 2)
                              delta2 = ps.delta(delta1, 2)
                              #apply zscore
-                             
-                             time = mel_spec.shape[0] 
+
+                             time = mel_spec.shape[0]
                              if(speaker in ['Session1','Session2','Session3','Session4']):
                                  #training set
                                  if(time <= 300):
@@ -181,9 +181,9 @@ def read_IEMOCAP():
                                       train_emt[emotion] = train_emt[emotion] + 1
                                       train_num = train_num + 1
                                  else:
-                                      
+
                                      if(emotion in ['ang','neu','sad']):
-                                         
+
                                          for i in range(2):
                                              if(i == 0):
                                                  begin = 0
@@ -191,7 +191,7 @@ def read_IEMOCAP():
                                              else:
                                                  begin = time - 300
                                                  end = time
-                                          
+
                                              part = mel_spec[begin:end,:]
                                              delta11 = delta1[begin:end,:]
                                              delta21 = delta2[begin:end,:]
@@ -218,7 +218,7 @@ def read_IEMOCAP():
                                             train_label[train_num] = em
                                             train_emt[emotion] = train_emt[emotion] + 1
                                             train_num = train_num + 1
-                                          
+
                              else:
                                  em = generate_label(emotion,6)
                                  if(wavname[-4] == 'M'):
@@ -259,7 +259,7 @@ def read_IEMOCAP():
                                              test_emt[emotion] = test_emt[emotion] + 1
                                              Test_label[test_num] = em
                                              test_num = test_num + 1
-                                     
+
                                  else:
                                      #valid_set
                                      em = generate_label(emotion,6)
@@ -298,14 +298,14 @@ def read_IEMOCAP():
                                              valid_emt[emotion] = valid_emt[emotion] + 1
                                              Valid_label[valid_num] = em
                                              valid_num = valid_num + 1
-                                     
-                                    
-                                 
+
+
+
                         else:
                             pass
-    
-    
-    
+
+
+
     hap_index = np.arange(hapnum)
     neu_index = np.arange(neunum)
     sad_index = np.arange(sadnum)
@@ -340,8 +340,8 @@ def read_IEMOCAP():
         hap_data = np.empty((pernum,300,filter_num,3),dtype = np.float32)
         neu_data = np.empty((pernum,300,filter_num,3),dtype = np.float32)
         sad_data = np.empty((pernum,300,filter_num,3),dtype = np.float32)
-        ang_data = np.empty((pernum,300,filter_num,3),dtype = np.float32)    
-    
+        ang_data = np.empty((pernum,300,filter_num,3),dtype = np.float32)
+
         hap_data = train_data[hap_index[0:pernum]].copy()
         hap_label = train_label[hap_index[0:pernum]].copy()
         ang_data = train_data[ang_index[0:pernum]].copy()
@@ -351,18 +351,18 @@ def read_IEMOCAP():
         neu_data = train_data[neu_index[0:pernum]].copy()
         neu_label = train_label[neu_index[0:pernum]].copy()
         train_num = 4*pernum
-    
+
         Train_label = np.empty((train_num,1), dtype = np.int8)
         Train_data = np.empty((train_num,300,filter_num,3),dtype = np.float32)
         Train_data[0:pernum] = hap_data
         Train_label[0:pernum] = hap_label
         Train_data[pernum:2*pernum] = sad_data
-        Train_label[pernum:2*pernum] = sad_label  
+        Train_label[pernum:2*pernum] = sad_label
         Train_data[2*pernum:3*pernum] = neu_data
-        Train_label[2*pernum:3*pernum] = neu_label 
+        Train_label[2*pernum:3*pernum] = neu_label
         Train_data[3*pernum:4*pernum] = ang_data
-        Train_label[3*pernum:4*pernum] = ang_label 
-    
+        Train_label[3*pernum:4*pernum] = ang_label
+
         arr = np.arange(train_num)
         np.random.shuffle(arr)
         Train_data = Train_data[arr[0:]]
@@ -372,15 +372,15 @@ def read_IEMOCAP():
         print test_emt
         print valid_emt
         #print test_label[0:500,:]
-        #f=open('./CASIA_40_delta.pkl','wb') 
+        #f=open('./CASIA_40_delta.pkl','wb')
         #output = './IEMOCAP40.pkl'
         output = './IEMOCAP.pkl'
-        f=open(output,'wb') 
+        f=open(output,'wb')
         cPickle.dump((Train_data,Train_label,test_data,test_label,valid_data,valid_label,Valid_label,Test_label,pernums_test,pernums_valid),f)
-        f.close()           
+        f.close()
     return
-                
-        
+
+
 
 
 if __name__=='__main__':
