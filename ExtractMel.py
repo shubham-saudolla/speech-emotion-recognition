@@ -102,7 +102,7 @@ def read_IEMOCAP():
     filter_num = 40
     pernums_test = np.arange(tnum)#remerber each utterance contain how many segments
     pernums_valid = np.arange(vnum)
-    rootdir = '/home/jamhan/hxj/datasets/IEMOCAP_full_release'
+    rootdir = 'E:\\Downloads\\IEMOCAP_full_release'
 
     mean1,std1,mean2,std2,mean3,std3 = load_data()
 
@@ -136,7 +136,7 @@ def read_IEMOCAP():
             emoevl = os.path.join(rootdir,speaker,'dialog/EmoEvaluation')
             for sess in os.listdir(sub_dir):
                 if(sess[7] == 'i'):
-                    emotdir = emoevl+'/'+sess+'.txt'
+                    emotdir = emoevl+'\\'+sess+'.txt'
                     #emotfile = open(emotdir)
                     emot_map = {}
                     with open(emotdir,'r') as emot_to_read:
@@ -153,7 +153,7 @@ def read_IEMOCAP():
                     files = glob.glob(file_dir)
                     for filename in files:
                         #wavname = filename[-23:-4]
-                        wavname = filename.split("/")[-1][:-4]
+                        wavname = filename.split("\\")[-1][:-4]
                         emotion = emot_map[wavname]
                         if(emotion in ['hap','ang','neu','sad']):
                              data, time, rate = read_file(filename)
