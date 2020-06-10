@@ -13,13 +13,14 @@ Created on Tue Jan  9 20:32:28 2018
 
 @author: hxj
 """
-
 import wave
 import numpy as np
 import python_speech_features as ps
 import os
 import glob
 import pickle as cPickle
+
+print(os.sep)
 #import base
 #import sigproc
 eps = 1e-5
@@ -100,7 +101,7 @@ def read_IEMOCAP():
 
     train_num = 2928
     filter_num = 40
-    rootdir = 'E:\Downloads\IEMOCAP_full_release\IEMOCAP_full_release'
+    rootdir = 'E:\\Downloads\\IEMOCAP_full_release'
     traindata1 = np.empty((train_num*300,filter_num),dtype=np.float32)
     traindata2 = np.empty((train_num*300,filter_num),dtype=np.float32)
     traindata3 = np.empty((train_num*300,filter_num),dtype=np.float32)
@@ -109,11 +110,11 @@ def read_IEMOCAP():
 
     for speaker in os.listdir(rootdir):
         if(speaker[0] == 'S'):
-            sub_dir = os.path.join(rootdir,speaker,'sentences/wav')
-            emoevl = os.path.join(rootdir,speaker,'dialog/EmoEvaluation')
+            sub_dir = os.path.join(rootdir,speaker,'sentences\wav')
+            emoevl = os.path.join(rootdir,speaker,'dialog\EmoEvaluation')
             for sess in os.listdir(sub_dir):
                 if(sess[7] == 'i'):
-                    emotdir = emoevl+'/'+sess+'.txt'
+                    emotdir = emoevl+'\\'+sess+'.txt'
                     #emotfile = open(emotdir)
                     emot_map = {}
                     with open(emotdir,'r') as emot_to_read:
@@ -130,7 +131,7 @@ def read_IEMOCAP():
                     files = glob.glob(file_dir)
                     for filename in files:
                         #wavname = filename[-23:-4]
-                        wavname = filename.split("/")[-1][:-4]
+                        wavname = filename.split("\\")[-1][:-4]
                         emotion = emot_map[wavname]
                         if(emotion in ['hap','ang','neu','sad']):
                              data, time, rate = read_file(filename)
