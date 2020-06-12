@@ -1,6 +1,5 @@
 from attention import attention
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 epsilon = 1e-3
 
@@ -131,7 +130,6 @@ def acrnn(inputs, num_classes=4,
     linear1 = leaky_relu(linear1, 0.01)
     #linear1 = batch_norm_wrapper(linear1,is_training)
     linear1 = tf.reshape(linear1, [-1, time_step, num_linear])
-
 
     # Define lstm cells with tensorflow
     # Forward direction cell

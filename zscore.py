@@ -216,6 +216,7 @@ def read_IEMOCAP():
         f.close()
     return
 
+
 if __name__ == '__main__':
     read_IEMOCAP()
     # print "test_num:", test_num
