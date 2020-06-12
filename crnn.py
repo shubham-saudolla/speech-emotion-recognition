@@ -1,15 +1,8 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 31 16:56:02 2018
-
-@author: hxj
-"""
-
-import tensorflow.compat.v1 as tf
 from tensorflow.python.training import moving_averages
-
+import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
+
+
 # Importer and Exporting
 # ========
 
