@@ -109,8 +109,8 @@ def read_IEMOCAP():
 
     for speaker in os.listdir(rootdir):
         if(speaker[0] == 'S'):
-            sub_dir = os.path.join(rootdir, speaker, 'sentences\wav')
-            emoevl = os.path.join(rootdir, speaker, 'dialog\EmoEvaluation')
+            sub_dir = os.path.join(rootdir, speaker, 'sentences\\wav')
+            emoevl = os.path.join(rootdir, speaker, 'dialog\\EmoEvaluation')
             for sess in os.listdir(sub_dir):
                 if(sess[7] == 'i'):
                     emotdir = emoevl+'\\'+sess+'.txt'

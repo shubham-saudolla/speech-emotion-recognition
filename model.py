@@ -13,7 +13,7 @@ import tensorflow as tf
 
 
 tf.app.flags.DEFINE_integer(
-    'num_epoch', 5000, 'The number of epoches for training.')
+    'num_epoch', 10000, 'The number of epoches for training.')
 tf.app.flags.DEFINE_integer('num_classes', 4, 'The number of emotion classes.')
 tf.app.flags.DEFINE_integer(
     'batch_size', 60, 'The number of samples in each batch.')
